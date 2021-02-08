@@ -1,0 +1,6 @@
+boto3==1.6.18
+botocore==1.9.18
+selenium==2.53.0 
+chromedriver-binary==2.37.0
+requests==2.23.0
+configparser

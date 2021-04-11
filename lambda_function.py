@@ -6,6 +6,7 @@ from time import sleep
 import datetime as dt
 import requests
 import configparser
+from dateutil.relativedelta import relativedelta
 
 config = configparser.ConfigParser()
 config.read('config.ini')
@@ -29,7 +30,7 @@ ZIP = config['PERSONAL_INFO']['ZIP']
 
 #Scheduling Info
 CURRENT_TIME = dt.datetime.now()
-BOOKING_DATE = dt.datetime.combine(dt.date.today() + dt.timedelta(days=7), dt.time(18, 0))
+BOOKING_DATE = dt.datetime.combine(dt.date.today() + dt.timedelta(days=3), dt.time(18, 0))
 
 FROM = BOOKING_DATE.strftime('%-I %p')
 TO = (BOOKING_DATE + dt.timedelta(hours=2)).strftime('%-I %p')

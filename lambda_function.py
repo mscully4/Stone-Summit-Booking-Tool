@@ -47,24 +47,31 @@ client = Client(ACCOUNT_ID_TWILIO, API_KEY_TWILIO)
 
 def lambda_handler(event, context):
     
-    run(CHROMIUM_LOCATION, CHROMEDRIVER_LOCATION)
+    status = run(CHROMIUM_LOCATION, CHROMEDRIVER_LOCATION)
     
     return {
         'statusCode': 200,
-        'body': "Success!"
+        'body': status
     }
     
 def run(chromium_location, chromedriver_location):
-    driver = create_web_driver(chromium_location,  chromedriver_location)
-    driver.get(BASE_URL)
-    sleep(2)
-    driver = page_1(driver)
-    sleep(2)
-    driver = page_2(driver)
-    sleep(2)
-    driver = page_3(driver)
-    driver.quit()  
-    return driver
+    try:
+        driver = create_web_driver(chromium_location, chromedriver_location)
+        driver.get(BASE_URL)
+        sleep(2)
+        driver = page_1(driver)
+        sleep(2)
+        driver = page_2(driver)
+        sleep(2)
+        driver = page_3(driver)
+        sleep(2)
+        driver = page_4(driver)
+        driver.quit()
+        return True
+    except Exception as error:
+        send_text(PHONE, PHONE_NUMBER_TWILIO, f"Booking Failed: {error}")
+        driver.quit()
+        return False
 
 def send_text(to, from_, message):
     client.api.account.messages.create(

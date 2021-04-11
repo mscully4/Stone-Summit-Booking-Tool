@@ -174,10 +174,14 @@ def page_3(driver):
             resp = requests.get(f'https://2captcha.com/res.php?key={API_KEY_2CAPTCHA}&action=get&id={id_}')
             if resp.text[:2].upper() == 'OK':
                 token = resp.text.split('|')[1]
+            elif resp.text.strip() != "CAPCHA_NOT_READY":
+                raise Exception("Captcha Status not in (CAPTCHA_NOT_READY, OK)")
 
             i += 1
             sleep(1)
             print(i, resp.status_code, resp.text)
+    else:
+        raise Exception("Captcha Error")
 
     driver.execute_script('''
     document.getElementById("g-recaptcha-response").innerHTML="{token}";

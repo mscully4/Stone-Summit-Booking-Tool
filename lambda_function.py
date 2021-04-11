@@ -7,6 +7,7 @@ import datetime as dt
 import requests
 import configparser
 from dateutil.relativedelta import relativedelta
+from twilio.rest import Client
 
 config = configparser.ConfigParser()
 config.read('config.ini')
@@ -38,6 +39,12 @@ TO = (BOOKING_DATE + dt.timedelta(hours=2)).strftime('%-I %p')
 API_KEY_2CAPTCHA = config['2CAPTCHA']['API_KEY']
 BASE_URL = os.environ['BASE_URL']
 
+ACCOUNT_ID_TWILIO = config['TWILIO']['ACCOUNT_ID']
+API_KEY_TWILIO = config['TWILIO']['API_KEY']
+PHONE_NUMBER_TWILIO = config['TWILIO']['PHONE_NUMBER']
+
+client = Client(ACCOUNT_ID_TWILIO, API_KEY_TWILIO)
+
 def lambda_handler(event, context):
     
     run(CHROMIUM_LOCATION, CHROMEDRIVER_LOCATION)
@@ -58,6 +65,13 @@ def run(chromium_location, chromedriver_location):
     driver = page_3(driver)
     driver.quit()  
     return driver
+
+def send_text(to, from_, message):
+    client.api.account.messages.create(
+        to=to,
+        from_=from_,
+        body=message
+    )
     
 def create_web_driver(chrome_path, driver_path):
     options = webdriver.ChromeOptions()

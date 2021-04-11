@@ -98,24 +98,29 @@ def page_1(driver):
     
     #Add participant
     driver.find_element_by_xpath("//a[text()='+']").click()
-    
+
+    # Booking within the same month
     if BOOKING_DATE.month == CURRENT_TIME.month:
         pass
+    # Booking in the next month
     elif BOOKING_DATE.month == (CURRENT_TIME + relativedelta(months=1)).month:
         driver.find_element_by_xpath("//a[@title='Next']").click()
     else:
-        raise Exception
-        
+        # Something has gone horribly wrong if we reach here
+        raise Exception("Error in selecting booking date")
+
     driver.find_element_by_xpath(f'//a[@class="ui-state-default" and text()="{BOOKING_DATE.day}"]').click()
     
     sleep(2)
     
     try:
-        driver.find_element_by_xpath('//td[contains(text(), "{FROM}") and contains(text(), "{TO}")]/parent::tr/td/a[@class="book-now-button"]'.format(FROM=FROM, TO=TO)).click()
-        return driver
-    
-    except Exception as error:
-        assert False, "No appointments available at given date/time"
+        driver.find_element_by_xpath(
+            f'//td[contains(text(), "{FROM}") and contains(text(), "{TO}")]/parent::tr/td/a[@class="book-now-button"]').click()
+    except:
+        raise Exception("No appointments available at given date/time")
+
+    return driver
+
 
 
 def page_2(driver):

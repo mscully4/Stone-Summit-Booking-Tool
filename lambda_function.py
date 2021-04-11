@@ -180,3 +180,11 @@ def page_3(driver):
     driver.find_element_by_xpath("//a[@id='confirm_booking_button']").click()
 
     return driver
+    
+def page_4(driver):
+    sleep(2)
+    if driver.find_element_by_xpath("//div[@id='iframe-or-mobile-modes-page-container-minimal']/h1").text.strip() == "Your booking is complete!":
+        send_text(PHONE, PHONE_NUMBER_TWILIO, f"Booking Created for {str(BOOKING_DATE)}")
+        return driver
+    else:
+        raise Exception("Booking Failed")
